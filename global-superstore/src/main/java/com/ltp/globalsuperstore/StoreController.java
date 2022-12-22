@@ -20,14 +20,15 @@ public class StoreController {
         return "index";
     }
 
-    @GetMapping("/inventory")
-    public String getInventory() {
-        return "inventory";
-    }
-
     @PostMapping("/submitItem")
     public String handleSubmit(Item item) {
         items.add(item);
         return "redirect:/inventory";
+    }
+
+    @GetMapping("/inventory")
+    public String getInventory(Model model) {
+        model.addAttribute("items", items);
+        return "inventory";
     }
 }
