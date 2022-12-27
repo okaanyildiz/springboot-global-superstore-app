@@ -3,8 +3,11 @@ package com.ltp.globalsuperstore;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +27,14 @@ public class StoreController {
     }
 
     @PostMapping("/submitItem")
-    public String handleSubmit(Item item, RedirectAttributes redirectAttributes) {
+    public String handleSubmit(@Valid Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (item.getDiscount() > item.getPrice()) {
+            result.rejectValue("price", "", "Price cannot be less than discount!");
+        }
+
+        if (result.hasErrors())
+            return "index";
+
         int index = getItemIndex(item.getId());
         if (index == Constants.NOT_FOUND) {
             items.add(item);
