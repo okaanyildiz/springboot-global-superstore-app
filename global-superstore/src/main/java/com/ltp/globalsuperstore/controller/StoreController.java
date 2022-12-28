@@ -1,4 +1,4 @@
-package com.ltp.globalsuperstore;
+package com.ltp.globalsuperstore.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ltp.globalsuperstore.Constants;
+import com.ltp.globalsuperstore.Item;
+
 @Controller
 public class StoreController {
-
-    List<Item> items = new ArrayList<Item>();
 
     @GetMapping("/")
     public String getForm(Model model, @RequestParam(required = false) String id) {
