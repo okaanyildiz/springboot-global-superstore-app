@@ -1,8 +1,5 @@
 package com.ltp.globalsuperstore.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -24,8 +21,7 @@ public class StoreController {
 
     @GetMapping("/")
     public String getForm(Model model, @RequestParam(required = false) String id) {
-        int index = getItemIndex(id);
-        model.addAttribute("item", index == Constants.NOT_FOUND ? new Item() : storeService.getItem(index));
+        model.addAttribute("item", storeService.getItemById(id));
         model.addAttribute("categories", Constants.CATEGORIES);
         return "index";
     }
@@ -39,12 +35,8 @@ public class StoreController {
         if (result.hasErrors())
             return "index";
 
-        int index = getItemIndex(item.getId());
-        if (index == Constants.NOT_FOUND) {
-            storeService.addItem(item);
-        } else {
-            storeService.updateItem(index, item);
-        }
+        storeService.submitItem(item);
+
         redirectAttributes.addFlashAttribute("status", Constants.SUCCESS_STATUS);
         return "redirect:/inventory";
     }
@@ -53,13 +45,5 @@ public class StoreController {
     public String getInventory(Model model) {
         model.addAttribute("items", storeService.getItems());
         return "inventory";
-    }
-
-    public int getItemIndex(String id) {
-        for (int i = 0; i < storeService.getItems().size(); i++) {
-            if (storeService.getItems().get(i).getId().equals(id))
-                return i;
-        }
-        return Constants.NOT_FOUND;
     }
 }
